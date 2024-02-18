@@ -1,4 +1,4 @@
-package service
+package hse.ru.vladch.service
 
 import hse.ru.vladch.enums.AccountType
 import hse.ru.vladch.entities.UserEntity
