@@ -37,6 +37,9 @@ class InMemoryMenuItemDao : MenuItemDao {
 
     override fun renameDish(oldName: String, newName: String) {
         val dish = getDish(oldName) ?: throw RuntimeException("The '$oldName' dish does not exist!")
+        if (findDish(newName)) {
+            throw RuntimeException("The dish with this new name already exists!")
+        }
         dish.name = newName
     }
 
@@ -49,6 +52,10 @@ class InMemoryMenuItemDao : MenuItemDao {
 
     override fun getDish(name: String): DishEntity? {
         return dishes.find { it.name == name }
+    }
+
+    override fun findDish(name: String): Boolean {
+        return dishes.find { it.name == name } != null
     }
 
     override fun getAllDishesString(): String {
@@ -66,5 +73,17 @@ class InMemoryMenuItemDao : MenuItemDao {
         val list = mutableListOf<DishEntity>()
         list.addAll(dishes)
         return list
+    }
+
+    override fun getDishReviews(name: String): String {
+        val dish = getDish(name) ?: throw RuntimeException("The dish does not exist!")
+        val dishReviews = dish.reviews
+        val stringBuilder = StringBuilder()
+        stringBuilder.append("Reviews:\n")
+        for (i in 0..dishReviews.size) {
+            val review = dishReviews[i]
+            stringBuilder.append("$i) Score: ${review.score}, Review: ${review.review}\n")
+        }
+        return stringBuilder.toString()
     }
 }

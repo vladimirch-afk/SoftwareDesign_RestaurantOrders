@@ -1,4 +1,8 @@
 package hse.ru.vladch.entities
 
-abstract class UserEntity(var login: String, var password: String) {
+import hse.ru.vladch.enums.AccountType
+
+abstract class UserEntity(var login: String,
+                          var password: String,
+                          var type : AccountType) {
 }

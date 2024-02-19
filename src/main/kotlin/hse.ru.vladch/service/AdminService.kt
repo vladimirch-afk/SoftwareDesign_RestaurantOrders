@@ -8,6 +8,7 @@ interface AdminService {
     fun setDishTime(name: String, time : Long)
     fun setDishPrice(name : String, price : Int)
     fun setDishProperties(name : String, price : Int, time : Long, amount : Int = 0)
+    fun setDishAmount(name : String, amount : Int)
     fun renameDish(oldName: String, newName: String)
     fun getDishesList() : String
     fun getAverageDishScore() : Int
@@ -16,4 +17,5 @@ interface AdminService {
     fun getDishScores() : String
     fun getOrdersNumForPeriod(start : Long, end : Long) : Int
     fun getOrdersNum() : Int
+    fun getDishReviews(name : String) : String
 }

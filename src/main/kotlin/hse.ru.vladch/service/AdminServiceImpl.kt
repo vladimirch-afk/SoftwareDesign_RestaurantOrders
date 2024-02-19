@@ -25,6 +25,10 @@ class AdminServiceImpl(menu: MenuItemDao) : AdminService {
         menuItemDao.setDishProperties(name, price, time, amount)
     }
 
+    override fun setDishAmount(name: String, amount : Int) {
+        menuItemDao.setDishAmount(name, amount)
+    }
+
     override fun renameDish(oldName: String, newName: String) {
         menuItemDao.renameDish(oldName, newName)
     }
@@ -73,5 +77,9 @@ class AdminServiceImpl(menu: MenuItemDao) : AdminService {
 
     override fun getOrdersNum(): Int {
         TODO("Not yet implemented")
+    }
+
+    override fun getDishReviews(name: String): String {
+        return menuItemDao.getDishReviews(name)
     }
 }
