@@ -7,14 +7,14 @@ import hse.ru.vladch.patternclasses.AccountFactory
 class InMemoryAccountDao : AccountDao {
     private val accounts = mutableListOf<UserEntity>()
     override fun createAccount(type: AccountType, login: String, password: String) {
-        if (findAccount(login) != null) {
-            throw RuntimeException("Account already exists! Choose another login")
-        }
         if (login.isEmpty()) {
             throw RuntimeException("Login cannot be empty!")
         }
         if (password.isEmpty()) {
             throw RuntimeException("Password cannot be empty!")
+        }
+        if (findAccount(login) != null) {
+            throw RuntimeException("Account already exists! Choose another login")
         }
         val accountFactory = AccountFactory()
         accounts.add(accountFactory.createAccount(type, login, password))
@@ -22,7 +22,7 @@ class InMemoryAccountDao : AccountDao {
 
     override fun deleteAccount(login: String, password: String) {
         val acc = findAccount(login) ?:
-                    throw RuntimeException("Account does not exists or already deleted!")
+                    throw RuntimeException("Account does not exists or was already deleted!")
         accounts.remove(acc)
     }
 

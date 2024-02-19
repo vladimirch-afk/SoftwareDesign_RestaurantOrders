@@ -61,7 +61,7 @@ class InMemoryMenuItemDao : MenuItemDao {
     override fun getAllDishesString(): String {
         val stringBuilder = StringBuilder()
         stringBuilder.append("Menu list:\n")
-        for (i in 0..dishes.size) {
+        for (i in 0..<dishes.size) {
             val dish = dishes[i]
             stringBuilder.append("$i) Name: ${dish.name}, Price: ${dish.price}," +
                     " Time required: ${dish.timeRequirement}\n")
@@ -80,7 +80,7 @@ class InMemoryMenuItemDao : MenuItemDao {
         val dishReviews = dish.reviews
         val stringBuilder = StringBuilder()
         stringBuilder.append("Reviews:\n")
-        for (i in 0..dishReviews.size) {
+        for (i in 0..<dishReviews.size) {
             val review = dishReviews[i]
             stringBuilder.append("$i) Score: ${review.score}, Review: ${review.review}\n")
         }

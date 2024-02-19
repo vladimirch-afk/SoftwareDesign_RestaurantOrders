@@ -17,7 +17,8 @@ class ConsoleControllerAdmin(ctx : ConsoleController) : Controller {
         println("Select the option:")
         println("1 - Edit menu")
         println("2 - Get statistics")
-        print("3 - Exit to authorization menu")
+        println("3 - Print menu")
+        print("4 - Exit to authorization menu")
         var ans = 0
         try {
             ans = readln().toInt()
@@ -25,7 +26,7 @@ class ConsoleControllerAdmin(ctx : ConsoleController) : Controller {
             println("Wrong input! Try again")
             printHelloTable()
         }
-        if ((ans < 1) || (ans > 3)) {
+        if ((ans < 1) || (ans > 4)) {
             println("Incorrect input! Try again...")
             printHelloTable()
         }
@@ -37,6 +38,9 @@ class ConsoleControllerAdmin(ctx : ConsoleController) : Controller {
                 printStatisticsMenu()
             }
             3 -> {
+                printAllMenu()
+            }
+            4 -> {
                 finishProgram()
             }
         }
@@ -86,7 +90,7 @@ class ConsoleControllerAdmin(ctx : ConsoleController) : Controller {
                 editDishProperties()
             }
             8 -> {
-                finishProgram()
+                cancel()
             }
         }
     }
@@ -131,9 +135,18 @@ class ConsoleControllerAdmin(ctx : ConsoleController) : Controller {
                 getOrdersNumInPeriod()
             }
             7 -> {
-                finishProgram()
+                cancel()
             }
         }
+    }
+
+    fun printAllMenu() {
+        try {
+            println(admin.getDishesList())
+        } catch (e : Exception) {
+            println(e.message)
+        }
+        printHelloTable()
     }
 
     fun addDish() {
@@ -272,6 +285,10 @@ class ConsoleControllerAdmin(ctx : ConsoleController) : Controller {
         context.launch()
     }
 
+    fun cancel() {
+        printHelloTable()
+    }
+
     fun getTheBestDish() {
         try {
             println("The best dish is:")
@@ -344,5 +361,4 @@ class ConsoleControllerAdmin(ctx : ConsoleController) : Controller {
         }
         printHelloTable()
     }
-
 }

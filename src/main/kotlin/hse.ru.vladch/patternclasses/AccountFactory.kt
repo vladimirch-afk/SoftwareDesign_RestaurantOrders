@@ -9,11 +9,11 @@ class AccountFactory {
     fun createAccount(type : AccountType, login : String, password : String) : UserEntity {
         return when(type) {
             AccountType.ADMINISTRATOR -> {
-                AdminEntity(login, password)
+                AdminEntity(login, password, type)
             }
 
             AccountType.CLIENT -> {
-                VisitorEntity(login, password)
+                VisitorEntity(login, password, type)
             }
 
             else -> {

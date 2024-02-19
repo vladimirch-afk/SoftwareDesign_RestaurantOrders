@@ -2,6 +2,7 @@ package hse.ru.vladch.controllers
 
 import hse.ru.vladch.dao.InMemoryAccountDao
 import hse.ru.vladch.enums.AccountType
+import kotlin.system.exitProcess
 
 class ConsoleController : Controller {
     private val accountDao = InMemoryAccountDao()
@@ -60,16 +61,23 @@ class ConsoleController : Controller {
     }
 
     private fun createAccount() {
-        println("Enter login:")
-        val login = readln()
-        println("Enter password:")
-        val password = readln()
         try {
-            val user = accountDao.authorizeUser(login, password)
-            if (user.type == AccountType.ADMINISTRATOR) {
+            println("Enter login:")
+            val login = readln()
+            println("Enter password:")
+            val password = readln()
+            println("Specify type [ADMIN / CLIENT]:")
+            val typeString = readln()
+            val type = when(typeString.lowercase()) {
+                "admin" -> AccountType.ADMINISTRATOR
+                "client" -> AccountType.CLIENT
+                else -> throw RuntimeException("No such account type!")
+            }
+            val user = accountDao.createAccount(type, login, password)
+            if (type == AccountType.ADMINISTRATOR) {
                 adminController.launch()
             }
-            if (user.type == AccountType.CLIENT) {
+            if (type == AccountType.CLIENT) {
                 visitorController.launch()
             }
         } catch (e : Exception) {
@@ -79,6 +87,6 @@ class ConsoleController : Controller {
     }
 
     private fun finishProgram() {
-        TODO()
+        exitProcess(0)
     }
 }

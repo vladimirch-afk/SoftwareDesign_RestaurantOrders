@@ -65,7 +65,7 @@ class AdminServiceImpl(menu: MenuItemDao) : AdminService {
         var i = 1
         for (dish in dishes) {
             val scoreSum = dish.reviews.sumOf { it.score }
-            stringBuilder.append("$i) Name: ${dish.name}, Avr score: ${scoreSum/dish.reviews.size}\n")
+            stringBuilder.append("${i + 1}) Name: ${dish.name}, Avr score: ${scoreSum/dish.reviews.size}\n")
             i += 1
         }
         return stringBuilder.toString()
