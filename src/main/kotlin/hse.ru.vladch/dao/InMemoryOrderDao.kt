@@ -6,7 +6,7 @@ import hse.ru.vladch.entities.OrderEntity
 class InMemoryOrderDao : OrderDao {
     private val orders = mutableListOf<OrderEntity>()
     override fun addOrder(creationTime: Long, list: MutableList<DishEntity>): Int {
-        orders.add(OrderEntity(orders.size, creationTime, list))
+        //orders.add(OrderEntity(orders.size, creationTime, list))
         return orders.size - 1
     }
 
@@ -26,4 +26,10 @@ class InMemoryOrderDao : OrderDao {
     override fun findOrder(id : Int): OrderEntity? {
         return orders.find { it.id == id }
     }
+
+    override fun getOrdersNumber(): Int {
+        return orders.size
+    }
+
+
 }

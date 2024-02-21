@@ -1,10 +1,13 @@
 package hse.ru.vladch.service
 
-interface KitchenService {
-    fun createOrder()
-    fun addDishToOrder()
-    fun cancelOrder()
-    fun getOrdersOfVisitor()
-    
+import hse.ru.vladch.entities.DishEntity
+import hse.ru.vladch.entities.OrderEntity
 
+interface KitchenService {
+    fun createOrder(user : String, dishes : MutableList<DishEntity>)
+    fun addDishToOrder(user : String, dish : DishEntity)
+    fun cancelOrder(user : String)
+    fun getOrdersOfVisitor(user : String)
+    fun getOrderStatus(user : String)
+    fun changeOrderStatus()
 }

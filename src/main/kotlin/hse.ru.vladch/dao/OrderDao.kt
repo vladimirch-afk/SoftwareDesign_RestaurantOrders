@@ -5,8 +5,10 @@ import hse.ru.vladch.entities.OrderEntity
 
 interface OrderDao {
     fun addOrder(creationTime : Long, list : MutableList<DishEntity>) : Int
+    fun addDishToOrder(dish : DishEntity, order : OrderEntity)
     fun deleteOrderFromMemory(id : Int)
     fun cancelOrder(id : Int)
     fun getAllOrders() : MutableList<OrderEntity>
     fun findOrder(id : Int) : OrderEntity?
+    fun getOrdersNumber() : Int
 }
