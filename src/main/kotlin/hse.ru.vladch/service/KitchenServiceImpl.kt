@@ -6,7 +6,7 @@ import hse.ru.vladch.entities.OrderEntity
 import hse.ru.vladch.enums.OrderStatus
 import java.time.LocalDateTime
 
-class KitchenServiceImpl : KitchenService {
+class KitchenServiceImpl() : KitchenService {
     val orderDao = InMemoryOrderDao()
     private val cookers = mutableListOf<Cooker>()
     private val orderQueue = mutableListOf<Pair<Long, OrderEntity>>()
@@ -84,15 +84,39 @@ class KitchenServiceImpl : KitchenService {
         }
     }
 
-    override fun getOrdersOfVisitor(user: String) {
-        TODO("Not yet implemented")
+    override fun getOrdersOfVisitor(user: String) : MutableList<OrderEntity> {
+        val orders = mutableListOf<OrderEntity>()
+        val order = findOrder(user)
+        if (order != null) {
+            orders.add(order)
+        }
+        return orders
     }
 
-    override fun getOrderStatus(user: String) {
-        TODO("Not yet implemented")
+    override fun getOrderStatus(user: String) : OrderStatus{
+        val order = findOrder(user)
+        if (order == null) {
+            throw RuntimeException("The user has no active orders!")
+        }
+        return order.status
     }
 
-    override fun changeOrderStatus() {
-        TODO("Not yet implemented")
+    private fun findOrder(user : String) : OrderEntity? {
+        for (item in allocatedOrders) {
+            if (item.user == user) {
+                return item
+            }
+        }
+        for (item in orderQueue) {
+            if (item.second.user == user) {
+                return item.second
+            }
+        }
+        return null
+    }
+
+    override fun changeOrderStatus(order: OrderEntity) {
+        order.status = OrderStatus.READY
+        orderDao.addOrder(order)
     }
 }

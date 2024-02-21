@@ -9,4 +9,12 @@ class OrderEntity(
     val dishes : MutableList<DishEntity>,
     var status : OrderStatus
 ) {
+    override fun toString(): String {
+        val stringBuilder = StringBuilder()
+        for (item in dishes) {
+            stringBuilder.append(item.name)
+            stringBuilder.append(", ")
+        }
+        return "ID: $id, User: $user, Status: $status, ${stringBuilder.toString()}"
+    }
 }

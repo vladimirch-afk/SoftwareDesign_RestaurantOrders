@@ -1,11 +1,18 @@
 package hse.ru.vladch.controllers
 
 import hse.ru.vladch.dao.InMemoryMenuItemDao
+import hse.ru.vladch.entities.VisitorEntity
+import hse.ru.vladch.service.AdminServiceImpl
+import hse.ru.vladch.service.KitchenService
 
-class ConsoleControllerVisitor(val menuInit : InMemoryMenuItemDao) : Controller {
+class ConsoleControllerVisitor(
+    menuInit : InMemoryMenuItemDao,
+    kitchenService: KitchenService
+) : Controller {
     private val menu = menuInit
+    private val kitchen = kitchenService
     override fun launch() {
-        TODO("Not yet implemented")
+        printMenu()
     }
 
     private fun printMenu() {

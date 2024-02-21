@@ -1,13 +1,18 @@
 package hse.ru.vladch.controllers
 
 import hse.ru.vladch.dao.InMemoryAccountDao
+import hse.ru.vladch.dao.InMemoryMenuItemDao
 import hse.ru.vladch.enums.AccountType
+import hse.ru.vladch.service.KitchenService
+import hse.ru.vladch.service.KitchenServiceImpl
 import kotlin.system.exitProcess
 
 class ConsoleController : Controller {
     private val accountDao = InMemoryAccountDao()
+    private val menuDao = InMemoryMenuItemDao()
+    private val kitchenService = KitchenServiceImpl()
     private val adminController = ConsoleControllerAdmin(this)
-    private val visitorController = ConsoleControllerVisitor()
+    private val visitorController = ConsoleControllerVisitor(menuDao, kitchenService)
     override fun launch() {
         printHelloTable()
     }
