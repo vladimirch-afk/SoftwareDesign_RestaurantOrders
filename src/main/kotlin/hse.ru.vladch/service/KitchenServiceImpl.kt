@@ -35,6 +35,7 @@ class KitchenServiceImpl : KitchenService {
         val order = orderQueue[0].second
         for (cooker in cookers) {
             if (cooker.getStatus()) {
+                order.status = OrderStatus.COOKING
                 cooker.startCooking(order, this)
                 allocatedOrders.add(order)
                 orderQueue.removeAt(0)
@@ -68,7 +69,19 @@ class KitchenServiceImpl : KitchenService {
     }
 
     override fun cancelOrder(user: String) {
-        TODO("Not yet implemented")
+        var order = orderQueue.find { it.second.user == user }?.second
+        if (order == null) {
+            order = allocatedOrders.find { it.user == user }
+        }
+        if (order == null) {
+            throw RuntimeException("There is no active orders for this user!")
+        }
+        for (cooker in cookers) {
+            if (cooker.getClientName() == user) {
+                cooker.cancelProcess()
+                break
+            }
+        }
     }
 
     override fun getOrdersOfVisitor(user: String) {

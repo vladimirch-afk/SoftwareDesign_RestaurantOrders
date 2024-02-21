@@ -10,6 +10,10 @@ class InMemoryOrderDao : OrderDao {
         return orders.size - 1
     }
 
+    override fun addDishToOrder(dish: DishEntity, order: OrderEntity) {
+        TODO("Not yet implemented")
+    }
+
     override fun deleteOrderFromMemory(id: Int) {
         val order = findOrder(id) ?: throw RuntimeException("The order does not exist")
         orders.remove(order)

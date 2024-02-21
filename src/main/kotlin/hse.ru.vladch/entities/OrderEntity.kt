@@ -7,6 +7,6 @@ class OrderEntity(
     val user : String,
     val creationTime : Long,
     val dishes : MutableList<DishEntity>,
-    val status : OrderStatus
+    var status : OrderStatus
 ) {
 }

@@ -9,5 +9,5 @@ interface KitchenService {
     fun cancelOrder(user : String)
     fun getOrdersOfVisitor(user : String)
     fun getOrderStatus(user : String)
-    fun changeOrderStatus()
+    fun changeOrderStatus(order : OrderEntity)
 }
