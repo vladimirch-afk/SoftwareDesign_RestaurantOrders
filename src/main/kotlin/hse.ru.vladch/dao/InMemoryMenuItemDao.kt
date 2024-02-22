@@ -54,6 +54,14 @@ class InMemoryMenuItemDao : MenuItemDao {
         return dishes.find { it.name == name }
     }
 
+    override fun getDishById(id : Int): DishEntity? {
+        try {
+            return dishes[id]
+        } catch (eString : Exception) {
+            throw RuntimeException("Cannot find the dish in menu")
+        }
+    }
+
     override fun findDish(name: String): Boolean {
         return dishes.find { it.name == name } != null
     }

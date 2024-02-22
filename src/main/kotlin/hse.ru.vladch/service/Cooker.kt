@@ -9,5 +9,6 @@ interface Cooker {
     fun cancelProcess()
     fun getStatus() : Boolean
     fun getClientName() : String
+    fun notifyKitchen()
     fun getOrder() : OrderEntity?
 }

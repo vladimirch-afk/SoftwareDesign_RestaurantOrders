@@ -26,6 +26,16 @@ class InMemoryOrderDao : OrderDao {
         TODO("Not yet implemented")
     }
 
+    override fun getAllUserOrders(user: String): MutableList<OrderEntity> {
+        val tmp = mutableListOf<OrderEntity>()
+        for (item in orders) {
+            if (item.user == user) {
+                orders.add(item)
+            }
+        }
+        return orders
+    }
+
     override fun findOrder(id : Int): OrderEntity? {
         return orders.find { it.id == id }
     }

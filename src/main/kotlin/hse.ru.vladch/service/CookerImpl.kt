@@ -14,11 +14,13 @@ class CookerImpl : Cooker {
     override fun startCooking(order: OrderEntity, kitchen: KitchenService) {
         this.order = order
         this.kitchen = kitchen
-        start = order.creationTime
+        //start = order.creationTime
         dishNum = order.dishes.size
+        isFree = false
         process = Thread {
-            cookDishes()
+            cookDishes(this)
         }
+        process?.start()
     }
 
     override fun addNewDish(dish: DishEntity) {
@@ -46,17 +48,19 @@ class CookerImpl : Cooker {
         return order
     }
 
-    private fun notifyKitchen() {
+    override fun notifyKitchen() {
         process?.interrupt()
         process = null
+        isFree = true
+        kitchen!!.changeOrderStatus(order!!)
     }
 
-    private fun cookDishes() {
+    private fun cookDishes(ctx : Cooker) {
         var i = 0
         while(i < dishNum) {
             Thread.sleep(order!!.dishes[i].timeRequirement * 1000)
             ++i
         }
-        notifyKitchen()
+        ctx.notifyKitchen()
     }
 }

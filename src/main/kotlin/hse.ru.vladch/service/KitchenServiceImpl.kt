@@ -1,15 +1,15 @@
 package hse.ru.vladch.service
 
 import hse.ru.vladch.dao.InMemoryOrderDao
+import hse.ru.vladch.dao.OrderDao
 import hse.ru.vladch.entities.DishEntity
 import hse.ru.vladch.entities.OrderEntity
 import hse.ru.vladch.enums.OrderStatus
 import java.time.LocalDateTime
 
-class KitchenServiceImpl() : KitchenService {
-    val orderDao = InMemoryOrderDao()
+class KitchenServiceImpl(private val orderDao: OrderDao) : KitchenService {
     private val cookers = mutableListOf<Cooker>()
-    private val orderQueue = mutableListOf<Pair<Long, OrderEntity>>()
+    private val orderQueue = mutableListOf<OrderEntity>()
     private val allocatedOrders = mutableListOf<OrderEntity>()
     private var currIndex : Int? = null
     init {
@@ -19,20 +19,22 @@ class KitchenServiceImpl() : KitchenService {
         currIndex = orderDao.getOrdersNumber()
     }
     override fun createOrder(user: String, dishes: MutableList<DishEntity>) {
-        if (orderQueue.find { it.second.user == user } != null ||
+        if (orderQueue.find { it.user == user } != null ||
             allocatedOrders.find { it.user == user } != null) {
             throw RuntimeException("The previous order of this user was not finished!")
         }
-        val creationTime = (System.currentTimeMillis() / 1000)
+        val creationTime = System.currentTimeMillis()
         val order = OrderEntity(currIndex!!,
             user, creationTime, dishes, OrderStatus.CREATED)
-        orderQueue.add(Pair(calculateCompletionTime(dishes), order))
-        orderQueue.sortBy { it.first }
+        orderQueue.add(order)
         allocateWork()
     }
 
     private fun allocateWork() {
-        val order = orderQueue[0].second
+        if (orderQueue.isEmpty()) {
+            return
+        }
+        val order = orderQueue[0]
         for (cooker in cookers) {
             if (cooker.getStatus()) {
                 order.status = OrderStatus.COOKING
@@ -53,7 +55,7 @@ class KitchenServiceImpl() : KitchenService {
     }
 
     override fun addDishToOrder(user: String, dish: DishEntity) {
-        var order = orderQueue.find { it.second.user == user }?.second
+        var order = orderQueue.find { it.user == user }
         if (order == null) {
             order = allocatedOrders.find { it.user == user }
         }
@@ -69,7 +71,7 @@ class KitchenServiceImpl() : KitchenService {
     }
 
     override fun cancelOrder(user: String) {
-        var order = orderQueue.find { it.second.user == user }?.second
+        var order = orderQueue.find { it.user == user }
         if (order == null) {
             order = allocatedOrders.find { it.user == user }
         }
@@ -84,13 +86,9 @@ class KitchenServiceImpl() : KitchenService {
         }
     }
 
-    override fun getOrdersOfVisitor(user: String) : MutableList<OrderEntity> {
-        val orders = mutableListOf<OrderEntity>()
-        val order = findOrder(user)
-        if (order != null) {
-            orders.add(order)
-        }
-        return orders
+    override fun getOrderOfVisitor(user: String) : OrderEntity {
+        val order = findOrder(user) ?: throw RuntimeException("No current orders")
+        return order
     }
 
     override fun getOrderStatus(user: String) : OrderStatus{
@@ -108,8 +106,8 @@ class KitchenServiceImpl() : KitchenService {
             }
         }
         for (item in orderQueue) {
-            if (item.second.user == user) {
-                return item.second
+            if (item.user == user) {
+                return item
             }
         }
         return null
@@ -118,5 +116,7 @@ class KitchenServiceImpl() : KitchenService {
     override fun changeOrderStatus(order: OrderEntity) {
         order.status = OrderStatus.READY
         orderDao.addOrder(order)
+        allocatedOrders.removeAt(allocatedOrders.indexOf(order))
+        allocateWork()
     }
 }

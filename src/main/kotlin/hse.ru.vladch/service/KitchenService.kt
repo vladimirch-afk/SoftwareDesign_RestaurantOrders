@@ -8,7 +8,7 @@ interface KitchenService {
     fun createOrder(user : String, dishes : MutableList<DishEntity>)
     fun addDishToOrder(user : String, dish : DishEntity)
     fun cancelOrder(user : String)
-    fun getOrdersOfVisitor(user : String) : MutableList<OrderEntity>
+    fun getOrderOfVisitor(user : String) : OrderEntity
     fun getOrderStatus(user : String) : OrderStatus
     fun changeOrderStatus(order : OrderEntity)
 }

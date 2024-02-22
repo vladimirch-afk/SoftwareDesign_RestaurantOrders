@@ -9,6 +9,7 @@ interface OrderDao {
     fun deleteOrderFromMemory(id : Int)
     fun cancelOrder(id : Int)
     fun getAllOrders() : MutableList<OrderEntity>
+    fun getAllUserOrders(user : String) : MutableList<OrderEntity>
     fun findOrder(id : Int) : OrderEntity?
     fun getOrdersNumber() : Int
 }
