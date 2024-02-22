@@ -6,11 +6,15 @@ import hse.ru.vladch.service.AdminServiceImpl
 import hse.ru.vladch.service.KitchenService
 
 class ConsoleControllerVisitor(
+    ctx : ConsoleController,
     menuInit : InMemoryMenuItemDao,
-    kitchenService: KitchenService
+    kitchenService: KitchenService,
+    user : String
 ) : Controller {
+    private val context = ctx
     private val menu = menuInit
     private val kitchen = kitchenService
+    private val login = user
     override fun launch() {
         printMenu()
     }
@@ -70,6 +74,14 @@ class ConsoleControllerVisitor(
     }
 
     private fun createOrder() {
+        println("Menu:")
+        printMenuItems()
+        println()
+        print("Enter START to finish input of dishes")
+        var input = readln()
+        while (input.lowercase() != "start") {
+
+        }
         TODO()
     }
 
@@ -90,6 +102,6 @@ class ConsoleControllerVisitor(
     }
 
     private fun exitToAuthorizationMenu() {
-        TODO()
+        context.launch()
     }
 }

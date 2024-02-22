@@ -1,12 +1,13 @@
 package hse.ru.vladch.controllers
 
 import hse.ru.vladch.dao.InMemoryMenuItemDao
+import hse.ru.vladch.dao.MenuItemDao
 import hse.ru.vladch.service.AdminService
 import hse.ru.vladch.service.AdminServiceImpl
 import kotlin.contracts.contract
 
-class ConsoleControllerAdmin(ctx : ConsoleController) : Controller {
-    private val menu = InMemoryMenuItemDao()
+class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : Controller {
+    private val menu = menuDao
     private val admin = AdminServiceImpl(menu)
     private val context = ctx
     override fun launch() {

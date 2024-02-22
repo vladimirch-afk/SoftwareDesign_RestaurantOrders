@@ -11,8 +11,6 @@ class ConsoleController : Controller {
     private val accountDao = InMemoryAccountDao()
     private val menuDao = InMemoryMenuItemDao()
     private val kitchenService = KitchenServiceImpl()
-    private val adminController = ConsoleControllerAdmin(this)
-    private val visitorController = ConsoleControllerVisitor(menuDao, kitchenService)
     override fun launch() {
         printHelloTable()
     }
@@ -54,9 +52,11 @@ class ConsoleController : Controller {
         try {
             val user = accountDao.authorizeUser(login, password)
             if (user.type == AccountType.ADMINISTRATOR) {
+                val adminController = ConsoleControllerAdmin(this, menuDao)
                 adminController.launch()
             }
             if (user.type == AccountType.CLIENT) {
+                val visitorController = ConsoleControllerVisitor(this, menuDao, kitchenService, login)
                 visitorController.launch()
             }
         } catch (e : Exception) {
@@ -80,9 +80,11 @@ class ConsoleController : Controller {
             }
             val user = accountDao.createAccount(type, login, password)
             if (type == AccountType.ADMINISTRATOR) {
+                val adminController = ConsoleControllerAdmin(this, menuDao)
                 adminController.launch()
             }
             if (type == AccountType.CLIENT) {
+                val visitorController = ConsoleControllerVisitor(this, menuDao, kitchenService, login)
                 visitorController.launch()
             }
         } catch (e : Exception) {
