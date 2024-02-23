@@ -1,6 +1,7 @@
 package hse.ru.vladch.dao
 
 import hse.ru.vladch.entities.DishEntity
+import hse.ru.vladch.entities.ReviewEntity
 
 interface MenuItemDao {
     fun addDish(name : String, price : Int, time : Long, amount : Int = 0)
@@ -16,4 +17,5 @@ interface MenuItemDao {
     fun getAllDishesString() : String
     fun getAllDishes() : MutableList<DishEntity>
     fun getDishReviews(name : String) : String
+    fun addDishReview(dishName : String, reviewEntity: ReviewEntity)
 }

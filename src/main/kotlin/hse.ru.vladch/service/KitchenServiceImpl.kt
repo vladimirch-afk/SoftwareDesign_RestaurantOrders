@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 
 class KitchenServiceImpl(
     private val orderDao: OrderDao,
-    private val bankService: BankService
+    private val bankService: BankService,
 ) : KitchenService {
     private val cookers = mutableListOf<Cooker>()
     private val orderQueue = mutableListOf<OrderEntity>()
@@ -95,10 +95,7 @@ class KitchenServiceImpl(
     }
 
     override fun getOrderStatus(user: String) : OrderStatus{
-        val order = findOrder(user)
-        if (order == null) {
-            throw RuntimeException("The user has no active orders!")
-        }
+        val order = findOrder(user) ?: throw RuntimeException("The user has no active orders!")
         return order.status
     }
 
@@ -120,6 +117,7 @@ class KitchenServiceImpl(
         order.status = OrderStatus.READY
         orderDao.addOrder(order)
         allocatedOrders.removeAt(allocatedOrders.indexOf(order))
+        bankService.createBill(order)
         allocateWork()
     }
 }

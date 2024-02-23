@@ -3,8 +3,10 @@ package hse.ru.vladch.controllers
 import hse.ru.vladch.dao.InMemoryMenuItemDao
 import hse.ru.vladch.dao.InMemoryOrderDao
 import hse.ru.vladch.entities.DishEntity
+import hse.ru.vladch.entities.ReviewEntity
 import hse.ru.vladch.entities.VisitorEntity
 import hse.ru.vladch.service.AdminServiceImpl
+import hse.ru.vladch.service.BankService
 import hse.ru.vladch.service.KitchenService
 
 class ConsoleControllerVisitor(
@@ -12,15 +14,18 @@ class ConsoleControllerVisitor(
     menuInit : InMemoryMenuItemDao,
     orderInit : InMemoryOrderDao,
     kitchenService: KitchenService,
+    bankService: BankService,
     user : String
 ) : Controller {
     private val context = ctx
     private val menu = menuInit
     private val orderDao = orderInit
     private val kitchen = kitchenService
+    private val bank = bankService
     private val login = user
+    private var action = printMenu()
     override fun launch() {
-        printMenu()
+        action
     }
 
     private fun printMenu() {
@@ -31,7 +36,9 @@ class ConsoleControllerVisitor(
         println("4 - View all previous orders (completed orders)")
         println("5 - View the not ready order")
         println("6 - Cancel last order")
-        print("7 - Exit program")
+        println("7 - Pay for the last order")
+        println("8 - Leave a review for a dish")
+        print("9 - Exit program")
         var ans = 0
         try {
             ans = readln().toInt()
@@ -39,7 +46,7 @@ class ConsoleControllerVisitor(
             println("Wrong input! Try again")
             printMenu()
         }
-        if ((ans < 1) || (ans > 7)) {
+        if ((ans < 1) || (ans > 9)) {
             println("Incorrect input! Try again...")
             printMenu()
         }
@@ -64,6 +71,12 @@ class ConsoleControllerVisitor(
                 cancelLastOrder()
             }
             7 -> {
+                payForTheLastOrder()
+            }
+            8 -> {
+                leaveReview()
+            }
+            9 -> {
                 exitToAuthorizationMenu()
             }
         }
@@ -78,6 +91,10 @@ class ConsoleControllerVisitor(
     }
 
     private fun createOrder() {
+        if (!bank.checkIfNoDebt(login)) {
+            println("You have to pay the previous order!")
+            printMenu()
+        }
         val dishes = mutableListOf<DishEntity>()
         println("Menu:")
         printMenuItems()
@@ -163,6 +180,44 @@ class ConsoleControllerVisitor(
         }
         println()
         printMenu()
+    }
+
+    private fun leaveReview() {
+        try {
+            printMenuItems()
+            println("Enter the NAME of the dish to evaluate:")
+            val name = readln()
+            println("Enter the STARS (mark 1-5) of the dish to evaluate:")
+            val mark = readln().toInt()
+            if (mark < 1 || mark > 5) {
+                throw RuntimeException("The mark should be in 1-5 range!")
+            }
+            println("Enter the TEXT for your review:")
+            val text = readln()
+            val review = ReviewEntity(mark, text)
+            menu.addDishReview(name, review)
+        } catch (e : Exception) {
+            println(e.message)
+        }
+    }
+
+    private fun payForTheLastOrder() {
+        try {
+            if (bank.checkIfNoDebt(login)) {
+                println("No orders to pay for!")
+                printMenu()
+            }
+            val bill = bank.getTheLastBill(login)
+            println("Required amount of money: ${bill!!.value}")
+            println("Enter the amount of money you want to give:")
+            val money = readln().toInt()
+            println(bank.payTheLastBill(login, money))
+            println()
+        } catch (e : Exception) {
+            println(e.message)
+        } finally {
+            printMenu()
+        }
     }
 
     private fun exitToAuthorizationMenu() {

@@ -4,6 +4,7 @@ import hse.ru.vladch.dao.InMemoryAccountDao
 import hse.ru.vladch.dao.InMemoryMenuItemDao
 import hse.ru.vladch.dao.InMemoryOrderDao
 import hse.ru.vladch.enums.AccountType
+import hse.ru.vladch.service.BankServiceImpl
 import hse.ru.vladch.service.KitchenService
 import hse.ru.vladch.service.KitchenServiceImpl
 import kotlin.system.exitProcess
@@ -12,7 +13,8 @@ class ConsoleController : Controller {
     private val accountDao = InMemoryAccountDao()
     private val menuDao = InMemoryMenuItemDao()
     private val orderDao = InMemoryOrderDao()
-    private val kitchenService = KitchenServiceImpl(orderDao)
+    private val bankService = BankServiceImpl()
+    private val kitchenService = KitchenServiceImpl(orderDao, bankService)
     override fun launch() {
         printHelloTable()
     }
@@ -59,7 +61,7 @@ class ConsoleController : Controller {
             }
             if (user.type == AccountType.CLIENT) {
                 val visitorController = ConsoleControllerVisitor(this,
-                    menuDao, orderDao, kitchenService, login)
+                    menuDao, orderDao, kitchenService, bankService, login)
                 visitorController.launch()
             }
         } catch (e : Exception) {
@@ -88,7 +90,7 @@ class ConsoleController : Controller {
             }
             if (type == AccountType.CLIENT) {
                 val visitorController = ConsoleControllerVisitor(this,
-                    menuDao, orderDao, kitchenService, login)
+                    menuDao, orderDao, kitchenService, bankService, login)
                 visitorController.launch()
             }
         } catch (e : Exception) {

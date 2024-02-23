@@ -1,6 +1,7 @@
 package hse.ru.vladch.dao
 
 import hse.ru.vladch.entities.DishEntity
+import hse.ru.vladch.entities.ReviewEntity
 
 class InMemoryMenuItemDao : MenuItemDao {
     private val dishes = mutableListOf<DishEntity>()
@@ -93,5 +94,13 @@ class InMemoryMenuItemDao : MenuItemDao {
             stringBuilder.append("$i) Score: ${review.score}, Review: ${review.review}\n")
         }
         return stringBuilder.toString()
+    }
+
+    override fun addDishReview(dishName : String, reviewEntity: ReviewEntity) {
+        for (item in dishes) {
+            if (item.name == dishName) {
+                item.reviews.add(reviewEntity)
+            }
+        }
     }
 }

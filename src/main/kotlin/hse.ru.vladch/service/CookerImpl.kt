@@ -29,8 +29,10 @@ class CookerImpl : Cooker {
     }
 
     override fun cancelProcess() {
-        process?.interrupt()
-        process = null
+        try {
+            process?.interrupt()
+            process = null
+        } catch (e : Exception) {}
     }
 
     override fun getStatus(): Boolean {

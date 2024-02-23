@@ -6,9 +6,9 @@ import hse.ru.vladch.enums.PaymentStatus
 
 class BillDaoImpl : BillDao {
     private val bills = mutableListOf<BillEntity>()
-    override fun createBill(user: String, order: OrderEntity): BillEntity {
+    override fun createBill(order: OrderEntity): BillEntity {
         try {
-            val bill = BillEntity(bills.size, user,
+            val bill = BillEntity(bills.size, order.user,
                 calculateSum(order), PaymentStatus.NOT_PAYED)
             bills.add(bill)
             return bill

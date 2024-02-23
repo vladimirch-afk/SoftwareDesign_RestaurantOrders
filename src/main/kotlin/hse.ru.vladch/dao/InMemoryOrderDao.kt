@@ -30,10 +30,10 @@ class InMemoryOrderDao : OrderDao {
         val tmp = mutableListOf<OrderEntity>()
         for (item in orders) {
             if (item.user == user) {
-                orders.add(item)
+                tmp.add(item)
             }
         }
-        return orders
+        return tmp
     }
 
     override fun findOrder(id : Int): OrderEntity? {
@@ -43,6 +43,4 @@ class InMemoryOrderDao : OrderDao {
     override fun getOrdersNumber(): Int {
         return orders.size
     }
-
-
 }
