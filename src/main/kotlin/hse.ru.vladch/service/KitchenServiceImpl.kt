@@ -7,7 +7,10 @@ import hse.ru.vladch.entities.OrderEntity
 import hse.ru.vladch.enums.OrderStatus
 import java.time.LocalDateTime
 
-class KitchenServiceImpl(private val orderDao: OrderDao) : KitchenService {
+class KitchenServiceImpl(
+    private val orderDao: OrderDao,
+    private val bankService: BankService
+) : KitchenService {
     private val cookers = mutableListOf<Cooker>()
     private val orderQueue = mutableListOf<OrderEntity>()
     private val allocatedOrders = mutableListOf<OrderEntity>()
