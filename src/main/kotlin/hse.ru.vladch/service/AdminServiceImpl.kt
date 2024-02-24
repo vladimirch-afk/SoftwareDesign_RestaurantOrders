@@ -4,6 +4,7 @@ import hse.ru.vladch.dao.InMemoryMenuItemDao
 import hse.ru.vladch.dao.MenuItemDao
 import hse.ru.vladch.dao.OrderDao
 import hse.ru.vladch.entities.DishEntity
+import kotlin.math.max
 
 class AdminServiceImpl(menu: MenuItemDao, orderD : OrderDao) : AdminService {
     private val menuItemDao = menu
@@ -27,13 +28,16 @@ class AdminServiceImpl(menu: MenuItemDao, orderD : OrderDao) : AdminService {
             throw RuntimeException("No dishes in the menu!")
         }
         var bestDish = dishes[0]
-        var bestScore = dishes[0].reviews.sumOf { it.score } / dishes[0].reviews.size
+        var bestScore = dishes[0].reviews.sumOf { it.score } / max(dishes[0].reviews.size, 1)
         for (dish in dishes) {
-            val score = dish.reviews.sumOf { it.score } / dish.reviews.size
+            val score = dish.reviews.sumOf { it.score } / max(dish.reviews.size, 1)
             if (score > bestScore) {
                 bestDish = dish
                 bestScore = score
             }
+        }
+        if (bestScore == 0) {
+            throw RuntimeException("No dish has any review yet!")
         }
         return "Name: ${bestDish.name}, Avg score: $bestScore"
     }
@@ -66,12 +70,15 @@ class AdminServiceImpl(menu: MenuItemDao, orderD : OrderDao) : AdminService {
 
     override fun getDishScores(): String {
         val dishes = menuItemDao.getAllDishes()
+        if (dishes.isEmpty()) {
+            throw RuntimeException("No dishes in the menu!")
+        }
         val stringBuilder = StringBuilder()
         var i = 1
         for (dish in dishes) {
             val scoreSum = dish.reviews.sumOf { it.score }
             stringBuilder.append("${i + 1}) Name: ${dish.name}, " +
-                    "Avr score: ${if (scoreSum != 0) (scoreSum/dish.reviews.size) else 0}\n")
+                    "Avr score: ${if (scoreSum != 0) (scoreSum/dish.reviews.size) else "-"}\n")
             i += 1
         }
         return stringBuilder.toString()

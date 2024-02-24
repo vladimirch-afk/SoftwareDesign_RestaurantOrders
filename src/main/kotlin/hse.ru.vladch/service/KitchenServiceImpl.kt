@@ -16,7 +16,7 @@ class KitchenServiceImpl(
     private val allocatedOrders = mutableListOf<OrderEntity>()
     private var currIndex : Int? = null
     init {
-        for (i in 1..10) {
+        for (i in 1..1) {
             cookers.add(CookerImpl())
         }
         currIndex = orderDao.getOrdersNumber()
@@ -45,13 +45,13 @@ class KitchenServiceImpl(
         if (orderQueue.isEmpty()) {
             return
         }
-        val order = orderQueue[0]
+        val order = orderQueue.maxBy { it -> it.dishes.sumOf { it -> it.price } }
         for (cooker in cookers) {
             if (cooker.getStatus()) {
                 order.status = OrderStatus.COOKING
                 cooker.startCooking(order, this)
                 allocatedOrders.add(order)
-                orderQueue.removeAt(0)
+                orderQueue.remove(order)
                 break
             }
         }
@@ -92,15 +92,11 @@ class KitchenServiceImpl(
         for (cooker in cookers) {
             if (cooker.getClientName() == user) {
                 cooker.cancelProcess()
-                for (item in allocatedOrders) {
-                    if (item.user == user) {
-                        allocatedOrders.remove(item)
-                        break
-                    }
-                }
                 break
             }
         }
+        allocatedOrders.remove(order)
+        orderQueue.remove(order)
     }
 
     override fun getOrderOfVisitor(user: String) : OrderEntity {
