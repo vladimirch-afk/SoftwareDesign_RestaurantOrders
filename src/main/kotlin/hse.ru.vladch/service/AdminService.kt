@@ -9,4 +9,5 @@ interface AdminService {
     fun getDishScores() : String
     fun getOrdersNumForPeriod(start : Long, end : Long) : Int
     fun getOrdersNum() : Int
+    fun getTotalMoneyReceived() : Long
 }

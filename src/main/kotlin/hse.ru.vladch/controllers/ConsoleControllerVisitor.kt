@@ -107,7 +107,7 @@ class ConsoleControllerVisitor(
             while (input.lowercase() != "start" && input.lowercase() != "cancel") {
                 val inp = input.toInt()
                 val id = inp.toInt()
-                val dish = menu.getDishById(id)
+                val dish = menu.getDishById(id - 1)
                 dishes.add(dish!!)
                 println("Enter the dish ID:")
                 input = readln()

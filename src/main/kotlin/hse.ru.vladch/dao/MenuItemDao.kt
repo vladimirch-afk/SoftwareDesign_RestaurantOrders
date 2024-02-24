@@ -18,6 +18,7 @@ interface MenuItemDao {
     fun getAllDishes() : MutableList<DishEntity>
     fun getDishReviews(name : String) : String
     fun addDishReview(dishName : String, reviewEntity: ReviewEntity)
+    fun changeDishAmount(dishEntity: DishEntity, change : Int)
     fun saveData()
     fun loadData()
 }

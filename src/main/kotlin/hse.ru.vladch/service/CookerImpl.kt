@@ -11,12 +11,16 @@ class CookerImpl : Cooker {
     private var process : Thread? = null
     private var start : Long? = null
     private var dishNum = 0
+    private var isInterrupted = false
     override fun startCooking(order: OrderEntity, kitchen: KitchenService) {
         this.order = order
         this.kitchen = kitchen
         //start = order.creationTime
         dishNum = order.dishes.size
         isFree = false
+        isInterrupted = false
+        process?.interrupt()
+        process = null
         process = Thread {
             cookDishes(this)
         }
@@ -29,14 +33,9 @@ class CookerImpl : Cooker {
     }
 
     override fun cancelProcess() {
-        try {
-            process?.interrupt()
-            process = null
-            isFree = true
-        } catch (e : Exception) {
-            process = null
-            isFree = true
-        }
+        isInterrupted = true
+        process = null
+        isFree = true
     }
 
     override fun getStatus(): Boolean {
@@ -55,7 +54,9 @@ class CookerImpl : Cooker {
     }
 
     override fun notifyKitchen() {
-        process?.interrupt()
+        try {
+            process?.interrupt()
+        } catch (e : Exception) {}
         process = null
         isFree = true
         kitchen!!.changeOrderStatus(order!!)
@@ -63,10 +64,12 @@ class CookerImpl : Cooker {
 
     private fun cookDishes(ctx : Cooker) {
         var i = 0
-        while(i < dishNum) {
+        while(i < dishNum && !isInterrupted) {
             Thread.sleep(order!!.dishes[i].timeRequirement * 1000)
             ++i
         }
-        ctx.notifyKitchen()
+        if (!isInterrupted) {
+            ctx.notifyKitchen()
+        }
     }
 }

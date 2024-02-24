@@ -107,7 +107,8 @@ class ConsoleControllerAdmin(
         println("4 - Get all dish scores")
         println("5 - Get total number of orders")
         println("6 - Get number of orders in selected period")
-        println("7 - Cancel")
+        println("7 - Get total money received")
+        println("8 - Cancel")
         var ans = 0
         try {
             ans = readln().toInt()
@@ -139,6 +140,9 @@ class ConsoleControllerAdmin(
                 getOrdersNumInPeriod()
             }
             7 -> {
+                getTotalMoneyReceived()
+            }
+            8 -> {
                 cancel()
             }
         }
@@ -296,7 +300,7 @@ class ConsoleControllerAdmin(
     private fun getTheBestDish() {
         try {
             println("The best dish is:")
-            admin.getBestDish()
+            println(admin.getBestDish())
         } catch (e : Exception) {
             println(e.message)
             printHelloTable()
@@ -307,7 +311,7 @@ class ConsoleControllerAdmin(
     private fun getMostPopularDish() {
         try {
             println("The most popular dish:")
-            admin.getMostPopularDish()
+            println(admin.getMostPopularDish())
         } catch (e : Exception) {
             println(e.message)
             printHelloTable()
@@ -362,6 +366,16 @@ class ConsoleControllerAdmin(
         } catch (e : Exception) {
             println(e.message)
             printHelloTable()
+        }
+        printHelloTable()
+    }
+
+    private fun getTotalMoneyReceived() {
+        try {
+            println("Total money received by the restaurant:")
+            println(admin.getTotalMoneyReceived())
+        } catch (e : Exception) {
+            println(e.message)
         }
         printHelloTable()
     }

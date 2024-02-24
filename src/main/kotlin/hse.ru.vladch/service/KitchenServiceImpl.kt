@@ -26,6 +26,14 @@ class KitchenServiceImpl(
             allocatedOrders.find { it.user == user } != null) {
             throw RuntimeException("The previous order of this user was not finished!")
         }
+        for (item in dishes) {
+            if (dishes.count { it.name == item.name } > item.amount) {
+                throw RuntimeException("Not enough dishes available!")
+            }
+        }
+        for (item in dishes) {
+            item.amount -= 1
+        }
         val creationTime = System.currentTimeMillis()
         val order = OrderEntity(currIndex!!,
             user, creationTime, dishes, OrderStatus.CREATED)
@@ -84,6 +92,12 @@ class KitchenServiceImpl(
         for (cooker in cookers) {
             if (cooker.getClientName() == user) {
                 cooker.cancelProcess()
+                for (item in allocatedOrders) {
+                    if (item.user == user) {
+                        allocatedOrders.remove(item)
+                        break
+                    }
+                }
                 break
             }
         }

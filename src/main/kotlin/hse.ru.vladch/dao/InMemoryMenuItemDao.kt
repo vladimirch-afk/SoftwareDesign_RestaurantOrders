@@ -79,8 +79,8 @@ class InMemoryMenuItemDao : MenuItemDao {
         stringBuilder.append("Menu list:\n")
         for (i in 0..<dishes.size) {
             val dish = dishes[i]
-            stringBuilder.append("$i) Name: ${dish.name}, Price: ${dish.price}," +
-                    " Time required: ${dish.timeRequirement}\n")
+            stringBuilder.append("${i+1}) Name: ${dish.name}, Price: ${dish.price}," +
+                    " Time required: ${dish.timeRequirement}, Amount: ${dish.amount}\n")
         }
         return stringBuilder.toString()
     }
@@ -109,6 +109,13 @@ class InMemoryMenuItemDao : MenuItemDao {
                 item.reviews.add(reviewEntity)
             }
         }
+    }
+
+    override fun changeDishAmount(dishEntity: DishEntity, change: Int) {
+        if (dishEntity.amount - change < 0) {
+            throw RuntimeException("Not enough dishes left!")
+        }
+        dishEntity.amount += change
     }
 
     override fun loadData() {

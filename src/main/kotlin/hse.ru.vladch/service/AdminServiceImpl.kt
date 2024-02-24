@@ -91,4 +91,8 @@ class AdminServiceImpl(menu: MenuItemDao, orderD : OrderDao) : AdminService {
     override fun getOrdersNum(): Int {
         return orderDao.getAllOrders().size
     }
+
+    override fun getTotalMoneyReceived(): Long {
+        return orderDao.getAllOrders().sumOf { it -> it.dishes.sumOf { it.price } }.toLong()
+    }
 }
