@@ -12,4 +12,6 @@ interface OrderDao {
     fun getAllUserOrders(user : String) : MutableList<OrderEntity>
     fun findOrder(id : Int) : OrderEntity?
     fun getOrdersNumber() : Int
+    fun saveData()
+    fun loadData()
 }

@@ -5,8 +5,8 @@ import hse.ru.vladch.entities.BillEntity
 import hse.ru.vladch.entities.OrderEntity
 import hse.ru.vladch.enums.PaymentStatus
 
-class BankServiceImpl : BankService {
-    private val billDao = BillDaoImpl()
+class BankServiceImpl(bDao : BillDaoImpl) : BankService {
+    private val billDao = bDao
     override fun createBill(order: OrderEntity) {
         billDao.createBill(order)
     }

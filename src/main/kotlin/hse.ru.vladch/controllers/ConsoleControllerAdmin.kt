@@ -1,14 +1,17 @@
 package hse.ru.vladch.controllers
 
-import hse.ru.vladch.dao.InMemoryMenuItemDao
 import hse.ru.vladch.dao.MenuItemDao
-import hse.ru.vladch.service.AdminService
+import hse.ru.vladch.dao.OrderDao
 import hse.ru.vladch.service.AdminServiceImpl
-import kotlin.contracts.contract
 
-class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : Controller {
+class ConsoleControllerAdmin(
+    ctx : ConsoleController,
+    menuDao : MenuItemDao,
+    orderD : OrderDao
+) : Controller {
     private val menu = menuDao
-    private val admin = AdminServiceImpl(menu)
+    private val orderDao = orderD
+    private val admin = AdminServiceImpl(menu, orderDao)
     private val context = ctx
     override fun launch() {
         printHelloTable()
@@ -19,7 +22,7 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         println("1 - Edit menu")
         println("2 - Get statistics")
         println("3 - Print menu")
-        print("4 - Exit to authorization menu")
+        println("4 - Exit to authorization menu")
         var ans = 0
         try {
             ans = readln().toInt()
@@ -47,7 +50,7 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         }
     }
 
-    fun printEditMenu() {
+    private fun printEditMenu() {
         println("Select the edit menu option:")
         println("1 - Add new dish")
         println("2 - Delete dish")
@@ -56,7 +59,7 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         println("5 - Edit name of the dish")
         println("6 - Edit the amount of the dish")
         println("7 - Edit the dish properties")
-        print("8 - Cancel")
+        println("8 - Cancel")
         var ans = 0
         try {
             ans = readln().toInt()
@@ -96,7 +99,7 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         }
     }
 
-    fun printStatisticsMenu() {
+    private fun printStatisticsMenu() {
         println("Select the statistic menu option:")
         println("1 - Get the best dish")
         println("2 - Get most popular dish")
@@ -104,7 +107,7 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         println("4 - Get all dish scores")
         println("5 - Get total number of orders")
         println("6 - Get number of orders in selected period")
-        print("7 - Cancel")
+        println("7 - Cancel")
         var ans = 0
         try {
             ans = readln().toInt()
@@ -141,16 +144,16 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         }
     }
 
-    fun printAllMenu() {
+    private fun printAllMenu() {
         try {
-            println(admin.getDishesList())
+            println(menu.getAllDishesString())
         } catch (e : Exception) {
             println(e.message)
         }
         printHelloTable()
     }
 
-    fun addDish() {
+    private fun addDish() {
         try {
             println("Enter the dish name:")
             val name = readln()
@@ -160,7 +163,7 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
             val time = readln().toLong()
             println("Enter the dish amount:")
             val amount = readln().toInt()
-            admin.addDish(name, price, time, amount)
+            menu.addDish(name, price, time, amount)
         } catch (e : RuntimeException) {
             println(e.message)
             printHelloTable()
@@ -172,11 +175,11 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         printHelloTable()
     }
 
-    fun deleteDish() {
+    private fun deleteDish() {
         try {
             println("Enter the dish name:")
             val name = readln()
-            admin.deleteDish(name)
+            menu.deleteDish(name)
         } catch (e : RuntimeException) {
             println(e.message)
             printHelloTable()
@@ -188,13 +191,13 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         printHelloTable()
     }
 
-    fun editPrice() {
+    private fun editPrice() {
         try {
             println("Enter the dish name:")
             val name = readln()
             println("Enter new price:")
             val price = readln().toInt()
-            admin.setDishPrice(name, price)
+            menu.setDishPrice(name, price)
         } catch (e : RuntimeException) {
             println(e.message)
             printHelloTable()
@@ -206,13 +209,13 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         printHelloTable()
     }
 
-    fun editAmount() {
+    private fun editAmount() {
         try {
             println("Enter the dish name:")
             val name = readln()
             println("Enter new amount:")
             val amount = readln().toInt()
-            admin.setDishAmount(name, amount)
+            menu.setDishAmount(name, amount)
         } catch (e : RuntimeException) {
             println(e.message)
             printHelloTable()
@@ -224,13 +227,13 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         printHelloTable()
     }
 
-    fun editName() {
+    private fun editName() {
         try {
             println("Enter the dish name:")
             val name = readln()
             println("Enter new name:")
             val newName = readln()
-            admin.renameDish(name, newName)
+            menu.renameDish(name, newName)
         } catch (e : RuntimeException) {
             println(e.message)
             printHelloTable()
@@ -242,13 +245,13 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         printHelloTable()
     }
 
-    fun editTimeComplexity() {
+    private fun editTimeComplexity() {
         try {
             println("Enter the dish name:")
             val name = readln()
             println("Enter new price:")
             val time = readln().toLong()
-            admin.setDishTime(name, time)
+            menu.setDishTime(name, time)
         } catch (e : RuntimeException) {
             println(e.message)
             printHelloTable()
@@ -260,7 +263,7 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         printHelloTable()
     }
 
-    fun editDishProperties() {
+    private fun editDishProperties() {
         try {
             println("Enter the dish name:")
             val name = readln()
@@ -270,7 +273,7 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
             val time = readln().toLong()
             println("Enter the dish amount:")
             val amount = readln().toInt()
-            admin.setDishProperties(name, price, time, amount)
+            menu.setDishProperties(name, price, time, amount)
         } catch (e : RuntimeException) {
             println(e.message)
             printHelloTable()
@@ -282,15 +285,15 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         printHelloTable()
     }
 
-    fun finishProgram() {
+    private fun finishProgram() {
         context.launch()
     }
 
-    fun cancel() {
+    private fun cancel() {
         printHelloTable()
     }
 
-    fun getTheBestDish() {
+    private fun getTheBestDish() {
         try {
             println("The best dish is:")
             admin.getBestDish()
@@ -301,7 +304,7 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         printHelloTable()
     }
 
-    fun getMostPopularDish() {
+    private fun getMostPopularDish() {
         try {
             println("The most popular dish:")
             admin.getMostPopularDish()
@@ -312,11 +315,11 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         printHelloTable()
     }
 
-    fun getDishReviews() {
+    private fun getDishReviews() {
         try {
             println("Enter the name of the dish:")
             val name = readln()
-            println(admin.getDishReviews(name))
+            println(menu.getDishReviews(name))
         } catch (e : RuntimeException) {
             println(e.message)
             printHelloTable()
@@ -327,7 +330,7 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         printHelloTable()
     }
 
-    fun getAllDishScores() {
+    private fun getAllDishScores() {
         try {
             println(admin.getDishScores())
         } catch (e : Exception) {
@@ -337,7 +340,7 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         printHelloTable()
     }
 
-    fun getTotalOrdersNum() {
+    private fun getTotalOrdersNum() {
         try {
             println("The total number of orders:")
             println(admin.getOrdersNum())
@@ -348,7 +351,7 @@ class ConsoleControllerAdmin(ctx : ConsoleController, menuDao : MenuItemDao) : C
         printHelloTable()
     }
 
-    fun getOrdersNumInPeriod() {
+    private fun getOrdersNumInPeriod() {
         try {
             println("Enter the start date in seconds:")
             val start = readln().toLong()

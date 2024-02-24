@@ -2,9 +2,16 @@ package hse.ru.vladch.dao
 
 import hse.ru.vladch.entities.DishEntity
 import hse.ru.vladch.entities.OrderEntity
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import hse.ru.vladch.entities.BillEntity
+import java.io.File
+import kotlin.io.path.Path
 
 class InMemoryOrderDao : OrderDao {
-    private val orders = mutableListOf<OrderEntity>()
+    private var orders = mutableListOf<OrderEntity>()
     override fun addOrder(order : OrderEntity) {
         orders.add(order)
     }
@@ -23,7 +30,7 @@ class InMemoryOrderDao : OrderDao {
     }
 
     override fun getAllOrders(): MutableList<OrderEntity> {
-        TODO("Not yet implemented")
+        return orders
     }
 
     override fun getAllUserOrders(user: String): MutableList<OrderEntity> {
@@ -42,5 +49,27 @@ class InMemoryOrderDao : OrderDao {
 
     override fun getOrdersNumber(): Int {
         return orders.size
+    }
+
+    override fun loadData() {
+        val directory = "src/main/resources"
+        val fileName = "orders.json"
+        File(directory).mkdirs()
+        val file = Path(directory, fileName).toFile()
+        val objectMapper = ObjectMapper()
+        objectMapper.registerModule(JavaTimeModule())
+        objectMapper.registerKotlinModule()
+        orders = objectMapper.readValue<MutableList<OrderEntity>>(file.readText())
+    }
+
+    override fun saveData() {
+        val directory = "src/main/resources"
+        val fileName = "orders.json"
+        File(directory).mkdirs()
+        val file = Path(directory, fileName).toFile()
+        val objectMapper = ObjectMapper()
+        objectMapper.registerModule(JavaTimeModule())
+        objectMapper.registerKotlinModule()
+        objectMapper.writeValue(file, orders)
     }
 }

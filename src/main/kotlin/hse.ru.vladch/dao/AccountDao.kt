@@ -8,4 +8,6 @@ interface AccountDao {
     fun deleteAccount(login : String, password : String)
     fun findAccount(login: String) : UserEntity?
     fun authorizeUser(login: String, password: String) : UserEntity
+    fun saveData()
+    fun loadData()
 }

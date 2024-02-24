@@ -38,7 +38,7 @@ class ConsoleControllerVisitor(
         println("6 - Cancel last order")
         println("7 - Pay for the last order")
         println("8 - Leave a review for a dish")
-        print("9 - Exit program")
+        println("9 - Exit program")
         var ans = 0
         try {
             ans = readln().toInt()
@@ -99,28 +99,24 @@ class ConsoleControllerVisitor(
         println("Menu:")
         printMenuItems()
         println()
-        print("Enter START to finish input of dishes")
-        print("Enter CANCEL to cancel input of dishes")
-        print("Enter the dish ID:")
-        var input = readln()
-        while (input.lowercase() != "start" && input.lowercase() != "cancel") {
-            val inp = input.toInt()
-            try {
+        println("Enter START to finish input of dishes")
+        println("Enter CANCEL to cancel input of dishes")
+        println("Enter the dish ID:")
+        try {
+            var input = readln()
+            while (input.lowercase() != "start" && input.lowercase() != "cancel") {
+                val inp = input.toInt()
                 val id = inp.toInt()
                 val dish = menu.getDishById(id)
                 dishes.add(dish!!)
-            } catch (e : Exception) {
-                println("Exception occurred!")
+                println("Enter the dish ID:")
+                input = readln()
             }
-            println("Enter the dish ID:")
-            input = readln()
-        }
-        if (input.lowercase() == "cancel") {
-            println("Order was cancelled")
-            printMenu()
-            return
-        }
-        try {
+            if (input.lowercase() == "cancel") {
+                println("Order was cancelled")
+                printMenu()
+                return
+            }
             kitchen.createOrder(login, dishes)
             println("Order was delivered to the kitchen")
         } catch (e : Exception) {
@@ -198,6 +194,8 @@ class ConsoleControllerVisitor(
             menu.addDishReview(name, review)
         } catch (e : Exception) {
             println(e.message)
+        } finally {
+            printMenu()
         }
     }
 

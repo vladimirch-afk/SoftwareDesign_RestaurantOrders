@@ -9,4 +9,6 @@ interface BillDao {
     fun getUserBills(user : String) : MutableList<BillEntity>
     fun getBillStatus(id : Int) : PaymentStatus
     fun changeBillStatus(id : Int, newStatus : PaymentStatus)
+    fun saveData()
+    fun loadData()
 }

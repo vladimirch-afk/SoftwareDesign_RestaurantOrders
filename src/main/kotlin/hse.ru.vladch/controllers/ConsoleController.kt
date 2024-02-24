@@ -1,5 +1,6 @@
 package hse.ru.vladch.controllers
 
+import hse.ru.vladch.dao.BillDaoImpl
 import hse.ru.vladch.dao.InMemoryAccountDao
 import hse.ru.vladch.dao.InMemoryMenuItemDao
 import hse.ru.vladch.dao.InMemoryOrderDao
@@ -13,17 +14,35 @@ class ConsoleController : Controller {
     private val accountDao = InMemoryAccountDao()
     private val menuDao = InMemoryMenuItemDao()
     private val orderDao = InMemoryOrderDao()
-    private val bankService = BankServiceImpl()
+    private val billDao = BillDaoImpl()
+    private val bankService = BankServiceImpl(billDao)
     private val kitchenService = KitchenServiceImpl(orderDao, bankService)
+    private var isInitiated = true
     override fun launch() {
+        if (isInitiated) {
+            loadData()
+        }
+        isInitiated = false
         printHelloTable()
+    }
+
+    private fun loadData() {
+        try {
+            accountDao.loadData()
+            menuDao.loadData()
+            orderDao.loadData()
+            billDao.loadData()
+        } catch (e : Exception) {
+            println(e.message)
+            println("Unable to load saved data")
+        }
     }
 
     private fun printHelloTable() {
         println("Select the option:")
         println("1 - Sign in")
         println("2 - Create account")
-        print("3 - Exit program")
+        println("3 - Exit program")
         var ans = 0
         try {
             ans = readln().toInt()
@@ -56,7 +75,7 @@ class ConsoleController : Controller {
         try {
             val user = accountDao.authorizeUser(login, password)
             if (user.type == AccountType.ADMINISTRATOR) {
-                val adminController = ConsoleControllerAdmin(this, menuDao)
+                val adminController = ConsoleControllerAdmin(this, menuDao, orderDao)
                 adminController.launch()
             }
             if (user.type == AccountType.CLIENT) {
@@ -85,7 +104,7 @@ class ConsoleController : Controller {
             }
             val user = accountDao.createAccount(type, login, password)
             if (type == AccountType.ADMINISTRATOR) {
-                val adminController = ConsoleControllerAdmin(this, menuDao)
+                val adminController = ConsoleControllerAdmin(this, menuDao, orderDao)
                 adminController.launch()
             }
             if (type == AccountType.CLIENT) {
@@ -100,6 +119,15 @@ class ConsoleController : Controller {
     }
 
     private fun finishProgram() {
-        exitProcess(0)
+        try {
+            accountDao.saveData()
+            menuDao.saveData()
+            orderDao.saveData()
+            billDao.saveData()
+        } catch (e : Exception) {
+            println("Unable to save data")
+        } finally {
+            exitProcess(0)
+        }
     }
 }

@@ -32,7 +32,11 @@ class CookerImpl : Cooker {
         try {
             process?.interrupt()
             process = null
-        } catch (e : Exception) {}
+            isFree = true
+        } catch (e : Exception) {
+            process = null
+            isFree = true
+        }
     }
 
     override fun getStatus(): Boolean {

@@ -2,9 +2,16 @@ package hse.ru.vladch.dao
 
 import hse.ru.vladch.entities.DishEntity
 import hse.ru.vladch.entities.ReviewEntity
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import hse.ru.vladch.entities.BillEntity
+import java.io.File
+import kotlin.io.path.Path
 
 class InMemoryMenuItemDao : MenuItemDao {
-    private val dishes = mutableListOf<DishEntity>()
+    private var dishes = mutableListOf<DishEntity>()
     override fun addDish(name: String, price: Int, time: Long, amount : Int) {
         if (name.isEmpty()) {
             throw RuntimeException("The name cannot be empty!")
@@ -102,5 +109,27 @@ class InMemoryMenuItemDao : MenuItemDao {
                 item.reviews.add(reviewEntity)
             }
         }
+    }
+
+    override fun loadData() {
+        val directory = "src/main/resources"
+        val fileName = "dishes.json"
+        File(directory).mkdirs()
+        val file = Path(directory, fileName).toFile()
+        val objectMapper = ObjectMapper()
+        objectMapper.registerModule(JavaTimeModule())
+        objectMapper.registerKotlinModule()
+        dishes = objectMapper.readValue<MutableList<DishEntity>>(file.readText())
+    }
+
+    override fun saveData() {
+        val directory = "src/main/resources"
+        val fileName = "dishes.json"
+        File(directory).mkdirs()
+        val file = Path(directory, fileName).toFile()
+        val objectMapper = ObjectMapper()
+        objectMapper.registerModule(JavaTimeModule())
+        objectMapper.registerKotlinModule()
+        objectMapper.writeValue(file, dishes)
     }
 }
