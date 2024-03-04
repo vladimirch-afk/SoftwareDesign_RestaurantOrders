@@ -6,7 +6,6 @@ import hse.ru.vladch.dao.InMemoryMenuItemDao
 import hse.ru.vladch.dao.InMemoryOrderDao
 import hse.ru.vladch.enums.AccountType
 import hse.ru.vladch.service.BankServiceImpl
-import hse.ru.vladch.service.KitchenService
 import hse.ru.vladch.service.KitchenServiceImpl
 import kotlin.system.exitProcess
 
@@ -18,6 +17,8 @@ class ConsoleController : Controller {
     private val bankService = BankServiceImpl(billDao)
     private val kitchenService = KitchenServiceImpl(orderDao, bankService)
     private var isInitiated = true
+
+    // Запустить окно авторизации
     override fun launch() {
         if (isInitiated) {
             loadData()
@@ -26,6 +27,7 @@ class ConsoleController : Controller {
         printHelloTable()
     }
 
+    // Загрузить все сохраненные данные из файлов
     private fun loadData() {
         try {
             accountDao.loadData()
@@ -38,6 +40,7 @@ class ConsoleController : Controller {
         }
     }
 
+    // Напечатать меню и принять ответ пользоввателя
     private fun printHelloTable() {
         println("Select the option:")
         println("1 - Sign in")
@@ -67,6 +70,7 @@ class ConsoleController : Controller {
         }
     }
 
+    // Получить данные у пользователя и авторизовать его
     private fun singIn() {
         println("Enter login:")
         val login = readln()
@@ -89,6 +93,7 @@ class ConsoleController : Controller {
         }
     }
 
+    // Получить данные у пользователя и создать аккаунт
     private fun createAccount() {
         try {
             println("Enter login:")
@@ -102,7 +107,7 @@ class ConsoleController : Controller {
                 "client" -> AccountType.CLIENT
                 else -> throw RuntimeException("No such account type!")
             }
-            val user = accountDao.createAccount(type, login, password)
+            //val user = accountDao.createAccount(type, login, password)
             if (type == AccountType.ADMINISTRATOR) {
                 val adminController = ConsoleControllerAdmin(this, menuDao, orderDao)
                 adminController.launch()
@@ -118,6 +123,7 @@ class ConsoleController : Controller {
         }
     }
 
+    // Сохранить данные в файлы и завершить программу
     private fun finishProgram() {
         try {
             accountDao.saveData()

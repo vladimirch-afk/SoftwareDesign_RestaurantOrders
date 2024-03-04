@@ -15,6 +15,6 @@ class OrderEntity(
             stringBuilder.append(item.name)
             stringBuilder.append(", ")
         }
-        return "ID: $id, User: $user, Status: $status, ${stringBuilder.toString()}"
+        return "ID: $id, User: $user, Status: $status, $stringBuilder"
     }
 }

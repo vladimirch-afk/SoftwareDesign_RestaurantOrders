@@ -6,6 +6,4 @@ class VisitorEntity(
                     login: String,
                     password: String,
                     type : AccountType
-) : UserEntity(login, password, type) {
-
-}
+) : UserEntity(login, password, type)

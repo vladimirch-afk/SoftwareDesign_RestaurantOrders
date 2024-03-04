@@ -15,10 +15,6 @@ class AccountFactory {
             AccountType.CLIENT -> {
                 VisitorEntity(login, password, type)
             }
-
-            else -> {
-                throw RuntimeException("Not implemented account type")
-            }
         }
     }
 }

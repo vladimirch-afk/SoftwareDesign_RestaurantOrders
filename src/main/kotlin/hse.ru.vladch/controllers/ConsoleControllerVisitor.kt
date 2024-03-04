@@ -4,8 +4,6 @@ import hse.ru.vladch.dao.InMemoryMenuItemDao
 import hse.ru.vladch.dao.InMemoryOrderDao
 import hse.ru.vladch.entities.DishEntity
 import hse.ru.vladch.entities.ReviewEntity
-import hse.ru.vladch.entities.VisitorEntity
-import hse.ru.vladch.service.AdminServiceImpl
 import hse.ru.vladch.service.BankService
 import hse.ru.vladch.service.KitchenService
 
@@ -28,6 +26,7 @@ class ConsoleControllerVisitor(
         action
     }
 
+    // Вывести главное меню посетителя
     private fun printMenu() {
         println("Select the option:")
         println("1 - View menu")
@@ -82,6 +81,7 @@ class ConsoleControllerVisitor(
         }
     }
 
+    // Вывести меню ресторана
     private fun printMenuItems() {
         try {
             println(menu.getAllDishesString())
@@ -90,6 +90,7 @@ class ConsoleControllerVisitor(
         }
     }
 
+    // Создать заказ и отправить на кухню
     private fun createOrder() {
         if (!bank.checkIfNoDebt(login)) {
             println("You have to pay the previous order!")
@@ -106,8 +107,7 @@ class ConsoleControllerVisitor(
             var input = readln()
             while (input.lowercase() != "start" && input.lowercase() != "cancel") {
                 val inp = input.toInt()
-                val id = inp.toInt()
-                val dish = menu.getDishById(id - 1)
+                val dish = menu.getDishById(inp - 1)
                 dishes.add(dish!!)
                 println("Enter the dish ID:")
                 input = readln()
@@ -125,6 +125,7 @@ class ConsoleControllerVisitor(
         printMenu()
     }
 
+    // Добавить блюдо к уже созданному заказу
     private fun addDishToLastOrder() {
         println("Menu:")
         printMenuItems()
@@ -133,8 +134,7 @@ class ConsoleControllerVisitor(
         val input = readln()
         val inp = input.toInt()
         try {
-            val id = inp.toInt()
-            val dish = menu.getDishById(id)
+            val dish = menu.getDishById(inp)
             kitchen.addDishToOrder(login, dish!!)
         } catch (e : Exception) {
             println(e.message)
@@ -142,6 +142,7 @@ class ConsoleControllerVisitor(
         printMenu()
     }
 
+    // Получить все завершенные заказы пользователя
     private fun getAllOrders() {
         try {
             val orders = orderDao.getAllUserOrders(login)
@@ -156,6 +157,7 @@ class ConsoleControllerVisitor(
         printMenu()
     }
 
+    // Получить все еще не готовый заказ пользователя
     private fun getLastOrder() {
         try {
             val order = kitchen.getOrderOfVisitor(login)
@@ -167,6 +169,7 @@ class ConsoleControllerVisitor(
         printMenu()
     }
 
+    // Отменить все еще готовящийся заказ
     private fun cancelLastOrder() {
         try {
             kitchen.cancelOrder(login)
@@ -178,6 +181,7 @@ class ConsoleControllerVisitor(
         printMenu()
     }
 
+    // Оставить отзыв на блюдо
     private fun leaveReview() {
         try {
             printMenuItems()
@@ -199,6 +203,7 @@ class ConsoleControllerVisitor(
         }
     }
 
+    // Заплатить за последний заказ
     private fun payForTheLastOrder() {
         try {
             if (bank.checkIfNoDebt(login)) {
@@ -218,6 +223,7 @@ class ConsoleControllerVisitor(
         }
     }
 
+    // Выйти в окно авторизации
     private fun exitToAuthorizationMenu() {
         context.launch()
     }

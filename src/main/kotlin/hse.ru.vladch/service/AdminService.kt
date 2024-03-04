@@ -1,7 +1,5 @@
 package hse.ru.vladch.service
 
-import hse.ru.vladch.entities.DishEntity
-
 interface AdminService {
     // Получить среднюю оценку блюд
     fun getAverageDishScore() : Int

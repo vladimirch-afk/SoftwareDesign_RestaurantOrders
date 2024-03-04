@@ -16,17 +16,9 @@ class InMemoryOrderDao : OrderDao {
         orders.add(order)
     }
 
-    override fun addDishToOrder(dish: DishEntity, order: OrderEntity) {
-        TODO("Not yet implemented")
-    }
-
     override fun deleteOrderFromMemory(id: Int) {
         val order = findOrder(id) ?: throw RuntimeException("The order does not exist")
         orders.remove(order)
-    }
-
-    override fun cancelOrder(id: Int) {
-        TODO("Not yet implemented")
     }
 
     override fun getAllOrders(): MutableList<OrderEntity> {
@@ -49,6 +41,10 @@ class InMemoryOrderDao : OrderDao {
 
     override fun getOrdersNumber(): Int {
         return orders.size
+    }
+
+    override fun getNextOrderId(): Int {
+        TODO("Not yet implemented")
     }
 
     override fun loadData() {

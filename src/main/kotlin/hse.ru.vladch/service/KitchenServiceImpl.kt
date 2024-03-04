@@ -1,11 +1,9 @@
 package hse.ru.vladch.service
 
-import hse.ru.vladch.dao.InMemoryOrderDao
 import hse.ru.vladch.dao.OrderDao
 import hse.ru.vladch.entities.DishEntity
 import hse.ru.vladch.entities.OrderEntity
 import hse.ru.vladch.enums.OrderStatus
-import java.time.LocalDateTime
 
 class KitchenServiceImpl(
     private val orderDao: OrderDao,
@@ -55,14 +53,6 @@ class KitchenServiceImpl(
                 break
             }
         }
-    }
-
-    private fun calculateCompletionTime(list : MutableList<DishEntity>) : Long {
-        var time : Long = 0
-        for (item in list) {
-            time += item.timeRequirement
-        }
-        return time
     }
 
     override fun addDishToOrder(user: String, dish: DishEntity) {

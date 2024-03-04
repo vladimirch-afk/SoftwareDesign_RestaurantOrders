@@ -2,14 +2,12 @@ package hse.ru.vladch.service
 
 import hse.ru.vladch.entities.DishEntity
 import hse.ru.vladch.entities.OrderEntity
-import kotlin.concurrent.thread
 
 class CookerImpl : Cooker {
     private var isFree = true
     private var order : OrderEntity? = null
     private var kitchen : KitchenService? = null
     private var process : Thread? = null
-    private var start : Long? = null
     private var dishNum = 0
     private var isInterrupted = false
     override fun startCooking(order: OrderEntity, kitchen: KitchenService) {
@@ -56,12 +54,15 @@ class CookerImpl : Cooker {
     override fun notifyKitchen() {
         try {
             process?.interrupt()
-        } catch (e : Exception) {}
+        } catch (e : Exception) {
+            throw e
+        }
         process = null
         isFree = true
         kitchen!!.changeOrderStatus(order!!)
     }
 
+    // Приготовить все блюда
     private fun cookDishes(ctx : Cooker) {
         var i = 0
         while(i < dishNum && !isInterrupted) {

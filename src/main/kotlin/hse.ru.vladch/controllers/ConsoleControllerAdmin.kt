@@ -17,6 +17,7 @@ class ConsoleControllerAdmin(
         printHelloTable()
     }
 
+    // Напечатать главное меню администратора и принять ответ пользователя
     private fun printHelloTable() {
         println("Select the option:")
         println("1 - Edit menu")
@@ -50,6 +51,7 @@ class ConsoleControllerAdmin(
         }
     }
 
+    // Напечатать меню, связанное с редактированием меню ресторана
     private fun printEditMenu() {
         println("Select the edit menu option:")
         println("1 - Add new dish")
@@ -99,6 +101,7 @@ class ConsoleControllerAdmin(
         }
     }
 
+    // Напечатать меню, связанное с получением статистики о ресторане
     private fun printStatisticsMenu() {
         println("Select the statistic menu option:")
         println("1 - Get the best dish")
@@ -148,6 +151,7 @@ class ConsoleControllerAdmin(
         }
     }
 
+    // Напечатать меню ресторана
     private fun printAllMenu() {
         try {
             println(menu.getAllDishesString())
@@ -157,6 +161,7 @@ class ConsoleControllerAdmin(
         printHelloTable()
     }
 
+    // Добавить блюдо в меню ресторана
     private fun addDish() {
         try {
             println("Enter the dish name:")
@@ -179,6 +184,7 @@ class ConsoleControllerAdmin(
         printHelloTable()
     }
 
+    // Удалить блюдо из меню ресторана
     private fun deleteDish() {
         try {
             println("Enter the dish name:")
@@ -195,6 +201,7 @@ class ConsoleControllerAdmin(
         printHelloTable()
     }
 
+    // Изменить цену блюда
     private fun editPrice() {
         try {
             println("Enter the dish name:")
@@ -231,6 +238,7 @@ class ConsoleControllerAdmin(
         printHelloTable()
     }
 
+    // Изменить название блюда в меню ресторана
     private fun editName() {
         try {
             println("Enter the dish name:")
@@ -249,6 +257,7 @@ class ConsoleControllerAdmin(
         printHelloTable()
     }
 
+    // Изменить временную сложность блюда
     private fun editTimeComplexity() {
         try {
             println("Enter the dish name:")
@@ -267,6 +276,7 @@ class ConsoleControllerAdmin(
         printHelloTable()
     }
 
+    // Изменить характеристики блюда по его имени
     private fun editDishProperties() {
         try {
             println("Enter the dish name:")
@@ -289,14 +299,17 @@ class ConsoleControllerAdmin(
         printHelloTable()
     }
 
+    // Вернуться в окно авторизации
     private fun finishProgram() {
         context.launch()
     }
 
+    // Вернуться в главное меню администратора
     private fun cancel() {
         printHelloTable()
     }
 
+    // Вывести лучшее блюдо в ресторане
     private fun getTheBestDish() {
         try {
             println("The best dish is:")
@@ -308,6 +321,7 @@ class ConsoleControllerAdmin(
         printHelloTable()
     }
 
+    // Вывести самое популярное блюдо в ресторане
     private fun getMostPopularDish() {
         try {
             println("The most popular dish:")
@@ -319,6 +333,7 @@ class ConsoleControllerAdmin(
         printHelloTable()
     }
 
+    // Получить отзывы о блюде по его имени
     private fun getDishReviews() {
         try {
             println("Enter the name of the dish:")
@@ -334,6 +349,7 @@ class ConsoleControllerAdmin(
         printHelloTable()
     }
 
+    // Получить среднюю оценку для каждого блюда
     private fun getAllDishScores() {
         try {
             println(admin.getDishScores())
@@ -344,6 +360,7 @@ class ConsoleControllerAdmin(
         printHelloTable()
     }
 
+    // Получить общее число заказов
     private fun getTotalOrdersNum() {
         try {
             println("The total number of orders:")
@@ -355,6 +372,7 @@ class ConsoleControllerAdmin(
         printHelloTable()
     }
 
+    // Получить коичество заказов за период
     private fun getOrdersNumInPeriod() {
         try {
             println("Enter the start date in seconds:")
@@ -370,6 +388,7 @@ class ConsoleControllerAdmin(
         printHelloTable()
     }
 
+    // Получить общую выручку ресторана
     private fun getTotalMoneyReceived() {
         try {
             println("Total money received by the restaurant:")

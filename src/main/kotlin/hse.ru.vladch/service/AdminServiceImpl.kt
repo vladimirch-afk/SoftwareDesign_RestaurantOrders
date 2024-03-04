@@ -1,9 +1,7 @@
 package hse.ru.vladch.service
 
-import hse.ru.vladch.dao.InMemoryMenuItemDao
 import hse.ru.vladch.dao.MenuItemDao
 import hse.ru.vladch.dao.OrderDao
-import hse.ru.vladch.entities.DishEntity
 import kotlin.math.max
 
 class AdminServiceImpl(menu: MenuItemDao, orderD : OrderDao) : AdminService {
