@@ -1,16 +1,16 @@
 package hse.ru.vladch.controllers
 
-import hse.ru.vladch.dao.InMemoryMenuItemDao
-import hse.ru.vladch.dao.InMemoryOrderDao
+import hse.ru.vladch.dao.MenuItemDaoImpl
+import hse.ru.vladch.dao.OrderDaoImpl
 import hse.ru.vladch.entities.DishEntity
 import hse.ru.vladch.entities.ReviewEntity
 import hse.ru.vladch.service.BankService
 import hse.ru.vladch.service.KitchenService
 
 class ConsoleControllerVisitor(
-    ctx : ConsoleController,
-    menuInit : InMemoryMenuItemDao,
-    orderInit : InMemoryOrderDao,
+    ctx : ConsoleControllerStart,
+    menuInit : MenuItemDaoImpl,
+    orderInit : OrderDaoImpl,
     kitchenService: KitchenService,
     bankService: BankService,
     user : String

@@ -86,7 +86,7 @@ class AdminServiceImpl(menu: MenuItemDao, orderD : OrderDao) : AdminService {
         val orders = orderDao.getAllOrders()
         var counter = 0
         for (item in orders) {
-            if (item.creationTime in start..end) {
+            if (item.creationTime in start..<(end + 24 * 60 * 60 * 1000)) {
                 ++counter
             }
         }

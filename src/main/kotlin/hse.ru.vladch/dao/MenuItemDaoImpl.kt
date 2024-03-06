@@ -6,11 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import hse.ru.vladch.entities.BillEntity
 import java.io.File
 import kotlin.io.path.Path
 
-class InMemoryMenuItemDao : MenuItemDao {
+class MenuItemDaoImpl : MenuItemDao {
     private var dishes = mutableListOf<DishEntity>()
     override fun addDish(name: String, price: Int, time: Long, amount : Int) {
         if (name.isEmpty()) {

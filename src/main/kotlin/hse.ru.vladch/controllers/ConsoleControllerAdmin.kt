@@ -3,9 +3,10 @@ package hse.ru.vladch.controllers
 import hse.ru.vladch.dao.MenuItemDao
 import hse.ru.vladch.dao.OrderDao
 import hse.ru.vladch.service.AdminServiceImpl
+import java.text.SimpleDateFormat
 
 class ConsoleControllerAdmin(
-    ctx : ConsoleController,
+    ctx : ConsoleControllerStart,
     menuDao : MenuItemDao,
     orderD : OrderDao
 ) : Controller {
@@ -375,12 +376,14 @@ class ConsoleControllerAdmin(
     // Получить коичество заказов за период
     private fun getOrdersNumInPeriod() {
         try {
-            println("Enter the start date in seconds:")
-            val start = readln().toLong()
-            println("Enter the end date in seconds:")
-            val end = readln().toLong()
+            println("Enter the start date in format [dd-MM-yyyy]:")
+            val start = readln()
+            println("Enter the end date in format [dd-MM-yyyy]:")
+            val end = readln()
             println("The number of orders in this period:")
-            println(admin.getOrdersNumForPeriod(start, end))
+            println(admin.getOrdersNumForPeriod(
+                SimpleDateFormat("dd-MM-yyyy").parse(start).time,
+                SimpleDateFormat("dd-MM-yyyy").parse(end).time))
         } catch (e : Exception) {
             println(e.message)
             printHelloTable()

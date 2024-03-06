@@ -33,7 +33,7 @@ class KitchenServiceImpl(
             item.amount -= 1
         }
         val creationTime = System.currentTimeMillis()
-        val order = OrderEntity(currIndex!!,
+        val order = OrderEntity(orderDao.getNextOrderId(),
             user, creationTime, dishes, OrderStatus.CREATED)
         orderQueue.add(order)
         allocateWork()

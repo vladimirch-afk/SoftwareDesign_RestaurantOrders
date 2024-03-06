@@ -1,18 +1,18 @@
 package hse.ru.vladch.controllers
 
 import hse.ru.vladch.dao.BillDaoImpl
-import hse.ru.vladch.dao.InMemoryAccountDao
-import hse.ru.vladch.dao.InMemoryMenuItemDao
-import hse.ru.vladch.dao.InMemoryOrderDao
+import hse.ru.vladch.dao.AccountDaoImpl
+import hse.ru.vladch.dao.MenuItemDaoImpl
+import hse.ru.vladch.dao.OrderDaoImpl
 import hse.ru.vladch.enums.AccountType
 import hse.ru.vladch.service.BankServiceImpl
 import hse.ru.vladch.service.KitchenServiceImpl
 import kotlin.system.exitProcess
 
-class ConsoleController : Controller {
-    private val accountDao = InMemoryAccountDao()
-    private val menuDao = InMemoryMenuItemDao()
-    private val orderDao = InMemoryOrderDao()
+class ConsoleControllerStart : Controller {
+    private val accountDao = AccountDaoImpl()
+    private val menuDao = MenuItemDaoImpl()
+    private val orderDao = OrderDaoImpl()
     private val billDao = BillDaoImpl()
     private val bankService = BankServiceImpl(billDao)
     private val kitchenService = KitchenServiceImpl(orderDao, bankService)

@@ -7,11 +7,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import hse.ru.vladch.entities.BillEntity
 import java.io.File
 import kotlin.io.path.Path
 
-class InMemoryAccountDao : AccountDao {
+class AccountDaoImpl : AccountDao {
     private var accounts = mutableListOf<UserEntity>()
     override fun createAccount(type: AccountType, login: String, password: String) {
         if (login.isEmpty()) {

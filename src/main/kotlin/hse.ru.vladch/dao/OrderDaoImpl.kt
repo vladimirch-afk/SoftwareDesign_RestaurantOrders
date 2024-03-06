@@ -1,17 +1,16 @@
 package hse.ru.vladch.dao
 
-import hse.ru.vladch.entities.DishEntity
 import hse.ru.vladch.entities.OrderEntity
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import hse.ru.vladch.entities.BillEntity
 import java.io.File
 import kotlin.io.path.Path
 
-class InMemoryOrderDao : OrderDao {
+class OrderDaoImpl : OrderDao {
     private var orders = mutableListOf<OrderEntity>()
+    private var currHighestID = 0
     override fun addOrder(order : OrderEntity) {
         orders.add(order)
     }
@@ -44,7 +43,8 @@ class InMemoryOrderDao : OrderDao {
     }
 
     override fun getNextOrderId(): Int {
-        TODO("Not yet implemented")
+        ++currHighestID
+        return currHighestID
     }
 
     override fun loadData() {
@@ -56,6 +56,12 @@ class InMemoryOrderDao : OrderDao {
         objectMapper.registerModule(JavaTimeModule())
         objectMapper.registerKotlinModule()
         orders = objectMapper.readValue<MutableList<OrderEntity>>(file.readText())
+        val tmp = orders.last()
+        if (tmp != null) {
+            currHighestID = tmp.id
+        } else {
+            currHighestID = 0
+        }
     }
 
     override fun saveData() {
