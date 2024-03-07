@@ -37,7 +37,7 @@ class ConsoleControllerVisitor(
         println("6 - Cancel last order")
         println("7 - Pay for the last order")
         println("8 - Leave a review for a dish")
-        println("9 - Exit program")
+        println("9 - Exit to authorization menu")
         var ans = 0
         try {
             ans = readln().toInt()
@@ -100,7 +100,7 @@ class ConsoleControllerVisitor(
         println("Menu:")
         printMenuItems()
         println()
-        println("Enter START to finish input of dishes")
+        println("Enter START to finish input of dishes and start cooking")
         println("Enter CANCEL to cancel input of dishes")
         println("Enter the dish ID:")
         try {

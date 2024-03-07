@@ -337,7 +337,7 @@ class ConsoleControllerAdmin(
     // Получить отзывы о блюде по его имени
     private fun getDishReviews() {
         try {
-            println("Enter the name of the dish:")
+            println("Enter the NAME of the dish:")
             val name = readln()
             println(menu.getDishReviews(name))
         } catch (e : RuntimeException) {

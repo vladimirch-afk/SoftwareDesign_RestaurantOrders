@@ -97,7 +97,7 @@ class MenuItemDaoImpl : MenuItemDao {
         stringBuilder.append("Reviews:\n")
         for (i in 0..<dishReviews.size) {
             val review = dishReviews[i]
-            stringBuilder.append("$i) Score: ${review.score}, Review: ${review.review}\n")
+            stringBuilder.append("${i + 1}) Score: ${review.score}, Review: ${review.review}\n")
         }
         return stringBuilder.toString()
     }

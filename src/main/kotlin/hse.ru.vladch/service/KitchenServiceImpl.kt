@@ -9,17 +9,21 @@ class KitchenServiceImpl(
     private val orderDao: OrderDao,
     private val bankService: BankService,
 ) : KitchenService {
+    private val maxCookers = 10
     private val cookers = mutableListOf<Cooker>()
     private val orderQueue = mutableListOf<OrderEntity>()
     private val allocatedOrders = mutableListOf<OrderEntity>()
     private var currIndex : Int? = null
     init {
-        for (i in 1..1) {
+        for (i in 1..maxCookers) {
             cookers.add(CookerImpl())
         }
         currIndex = orderDao.getOrdersNumber()
     }
     override fun createOrder(user: String, dishes: MutableList<DishEntity>) {
+        if (dishes.isEmpty()) {
+            throw RuntimeException("The order is empty! It will not be cooked!")
+        }
         if (orderQueue.find { it.user == user } != null ||
             allocatedOrders.find { it.user == user } != null) {
             throw RuntimeException("The previous order of this user was not finished!")
