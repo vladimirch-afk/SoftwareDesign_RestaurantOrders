@@ -1,5 +1,6 @@
 package hse.ru.vladch.service
 
+import hse.ru.vladch.dao.MenuItemDao
 import hse.ru.vladch.dao.OrderDao
 import hse.ru.vladch.entities.DishEntity
 import hse.ru.vladch.entities.OrderEntity
@@ -60,6 +61,9 @@ class KitchenServiceImpl(
     }
 
     override fun addDishToOrder(user: String, dish: DishEntity) {
+        if (dish.amount <= 0) {
+            throw RuntimeException("Not enough dish!")
+        }
         var order = orderQueue.find { it.user == user }
         if (order == null) {
             order = allocatedOrders.find { it.user == user }
@@ -67,6 +71,7 @@ class KitchenServiceImpl(
         if (order == null) {
             throw RuntimeException("There is no active orders for this user!")
         }
+        dish.amount -= 1
         for (cooker in cookers) {
             if (cooker.getClientName() == user) {
                 cooker.addNewDish(dish)

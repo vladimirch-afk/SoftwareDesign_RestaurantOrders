@@ -130,12 +130,13 @@ class ConsoleControllerVisitor(
         println("Menu:")
         printMenuItems()
         println()
-        println("Print dish name:")
+        println("Print dish ID:")
         val input = readln()
         val inp = input.toInt()
         try {
-            val dish = menu.getDishById(inp)
+            val dish = menu.getDishById(inp - 1)
             kitchen.addDishToOrder(login, dish!!)
+            println("The dish was added")
         } catch (e : Exception) {
             println(e.message)
         }
