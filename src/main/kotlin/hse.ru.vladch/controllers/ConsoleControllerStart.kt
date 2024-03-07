@@ -31,12 +31,23 @@ class ConsoleControllerStart : Controller {
     private fun loadData() {
         try {
             accountDao.loadData()
+        } catch (e : Exception) {
+            println("Unable to load saved accounts")
+        }
+        try {
             menuDao.loadData()
+        } catch (e : Exception) {
+            println("Unable to load saved menu")
+        }
+        try {
             orderDao.loadData()
+        } catch (e : Exception) {
+            println("Unable to load saved orders")
+        }
+        try {
             billDao.loadData()
         } catch (e : Exception) {
-            println(e.message)
-            println("Unable to load saved data")
+            println("Unable to load saved bills")
         }
     }
 
@@ -107,7 +118,7 @@ class ConsoleControllerStart : Controller {
                 "client" -> AccountType.CLIENT
                 else -> throw RuntimeException("No such account type!")
             }
-            //val user = accountDao.createAccount(type, login, password)
+            accountDao.createAccount(type, login, password)
             if (type == AccountType.ADMINISTRATOR) {
                 val adminController = ConsoleControllerAdmin(this, menuDao, orderDao)
                 adminController.launch()
@@ -127,13 +138,24 @@ class ConsoleControllerStart : Controller {
     private fun finishProgram() {
         try {
             accountDao.saveData()
+        } catch (e : Exception) {
+            println("Unable to save accounts")
+        }
+        try {
             menuDao.saveData()
+        } catch (e : Exception) {
+            println("Unable to save menu")
+        }
+        try {
             orderDao.saveData()
+        } catch (e : Exception) {
+            println("Unable to save orders")
+        }
+        try {
             billDao.saveData()
         } catch (e : Exception) {
-            println("Unable to save data")
-        } finally {
-            exitProcess(0)
+            println("Unable to save bills")
         }
+        exitProcess(0)
     }
 }

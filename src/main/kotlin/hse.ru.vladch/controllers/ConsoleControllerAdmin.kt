@@ -263,7 +263,7 @@ class ConsoleControllerAdmin(
         try {
             println("Enter the dish name:")
             val name = readln()
-            println("Enter new price:")
+            println("Enter new time complexity in seconds:")
             val time = readln().toLong()
             menu.setDishTime(name, time)
         } catch (e : RuntimeException) {

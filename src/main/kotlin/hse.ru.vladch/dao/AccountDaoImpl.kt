@@ -13,10 +13,10 @@ import kotlin.io.path.Path
 class AccountDaoImpl : AccountDao {
     private var accounts = mutableListOf<UserEntity>()
     override fun createAccount(type: AccountType, login: String, password: String) {
-        if (login.isEmpty()) {
+        if (login.replace(" ", "").isEmpty()) {
             throw RuntimeException("Login cannot be empty!")
         }
-        if (password.isEmpty()) {
+        if (password.replace(" ", "").isEmpty()) {
             throw RuntimeException("Password cannot be empty!")
         }
         if (findAccount(login) != null) {
